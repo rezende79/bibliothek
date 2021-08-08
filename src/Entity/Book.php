@@ -51,4 +51,11 @@ class Book
     {
         return $this->description;
     }
+
+    public function __construct(string $title, string $author, string $description)
+    {
+        $this->title = $title;
+        $this->author = $author;
+        $this->description = $description;
+    }
 }
