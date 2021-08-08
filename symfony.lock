@@ -121,6 +121,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "symfony/browser-kit": {
+        "version": "v5.3.4"
+    },
     "symfony/cache": {
         "version": "v5.3.4"
     },
@@ -142,6 +145,9 @@
             "bin/console"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v5.3.4"
+    },
     "symfony/dependency-injection": {
         "version": "v5.3.4"
     },
@@ -149,6 +155,9 @@
         "version": "v2.4.0"
     },
     "symfony/doctrine-bridge": {
+        "version": "v5.3.4"
+    },
+    "symfony/dom-crawler": {
         "version": "v5.3.4"
     },
     "symfony/dotenv": {
@@ -221,6 +230,21 @@
     "symfony/orm-pack": {
         "version": "v2.1.0"
     },
+    "symfony/phpunit-bridge": {
+        "version": "5.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.3",
+            "ref": "905679249e7b10f06c572917a9022a72cbfedc04"
+        },
+        "files": [
+            ".env.test",
+            "bin/phpunit",
+            "phpunit.xml.dist",
+            "tests/bootstrap.php"
+        ]
+    },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.23.1"
     },
@@ -266,6 +290,9 @@
     },
     "symfony/string": {
         "version": "v5.3.3"
+    },
+    "symfony/test-pack": {
+        "version": "v1.0.8"
     },
     "symfony/var-dumper": {
         "version": "v5.3.6"
