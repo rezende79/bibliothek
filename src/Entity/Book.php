@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
@@ -19,11 +20,13 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Title cannot be blank")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Author cannot be blank")
      */
     private $author;
 
@@ -52,7 +55,7 @@ class Book
         return $this->description;
     }
 
-    public function __construct(string $title, string $author, string $description)
+    public function __construct(string $title = '', string $author = '', string $description = '')
     {
         $this->title = $title;
         $this->author = $author;
