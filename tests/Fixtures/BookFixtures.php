@@ -1,14 +1,13 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\Tests\Fixtures;
 
 use App\Entity\Book;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 
-class BookFixtures extends Fixture
+final class BookFixtures
 {
-    public function load(ObjectManager $manager)
+    public function load(EntityManager $manager)
     {
         $manager->persist(new Book('To Kill a Mockingbird', 'Harper Lee', ''));
         $manager->persist(new Book('1984', 'George Orwell', ''));

@@ -7,32 +7,13 @@ namespace App\Tests\Manager;
 
 use App\Entity\Book;
 use App\Manager\BookManager;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Tests\BaseKernelTestCase;
 
-final class BookManagerTest extends KernelTestCase
+final class BookManagerTest extends BaseKernelTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        $purger = new ORMPurger($this->entityManager);
-        $purger->purge();
-    }
-
     public function test_if_create_new_book()
     {
-        $bookManager = new BookManager($this->entityManager);
+        $bookManager = new BookManager($this->getEntityManager());
 
         $bookManager->create(new Book(
             'Title',
@@ -40,10 +21,8 @@ final class BookManagerTest extends KernelTestCase
             'Description'
         ));
 
-        /**
-         * @var Book $book
-         */
-        $book = $this->entityManager->getRepository(Book::class)->findOneBy(['title' => 'Title']);
+        /** @var Book $book */
+        $book = $this->getEntityManager()->getRepository(Book::class)->findOneBy(['title' => 'Title']);
 
         $this->assertEquals('Author', $book->getAuthor());
         $this->assertEquals('Description', $book->getDescription());
@@ -51,7 +30,7 @@ final class BookManagerTest extends KernelTestCase
 
     public function test_if_update_a_book()
     {
-        $bookManager = new BookManager($this->entityManager);
+        $bookManager = new BookManager($this->getEntityManager());
 
         $bookManager->create(new Book(
             'Title',
@@ -59,10 +38,8 @@ final class BookManagerTest extends KernelTestCase
             'Description'
         ));
 
-        /**
-         * @var Book $book
-         */
-        $book = $this->entityManager->getRepository(Book::class)->findOneBy(['title' => 'Title']);
+        /** @var Book $book */
+        $book = $this->getEntityManager()->getRepository(Book::class)->findOneBy(['title' => 'Title']);
 
         $book->setTitle('New Title');
         $book->setAuthor('New Author');
@@ -77,7 +54,7 @@ final class BookManagerTest extends KernelTestCase
 
     public function test_if_delete_a_book()
     {
-        $bookManager = new BookManager($this->entityManager);
+        $bookManager = new BookManager($this->getEntityManager());
 
         $bookManager->create(new Book(
             'Title',
@@ -85,21 +62,11 @@ final class BookManagerTest extends KernelTestCase
             'Description'
         ));
 
-        /**
-         * @var Book $book
-         */
-        $book = $this->entityManager->getRepository(Book::class)->findOneBy(['title' => 'Title']);
+        /** @var Book $book */
+        $book = $this->getEntityManager()->getRepository(Book::class)->findOneBy(['title' => 'Title']);
 
         $bookManager->delete($book);
 
-        $this->assertNull($this->entityManager->getRepository(Book::class)->findOneBy(['title' => 'Title']));
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
+        $this->assertNull($this->getEntityManager()->getRepository(Book::class)->findOneBy(['title' => 'Title']));
     }
 }
