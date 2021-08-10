@@ -7,29 +7,27 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Manager\BookManager;
 use App\Repository\BookRepository;
+use App\Serializer\GenericSerializer;
+use App\Validator\GenericValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 final class BookController extends AbstractController
 {
     private $entityManager;
     private $bookRepository;
+    private $validator;
     private $serializer;
 
-    public function __construct(EntityManagerInterface $entityManager, BookRepository $bookRepository)
+    public function __construct(EntityManagerInterface $entityManager, BookRepository $bookRepository, GenericValidator $validator, GenericSerializer $serializer)
     {
         $this->entityManager = $entityManager;
         $this->bookRepository = $bookRepository;
-
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $this->serializer = new Serializer($normalizers, $encoders);
+        $this->validator = $validator;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -37,10 +35,7 @@ final class BookController extends AbstractController
      */
     public function bookList(): JsonResponse
     {
-        $data = $this->serializer->serialize(
-            $this->bookRepository->findAll(),
-            'json'
-        );
+        $data = $this->serializer->serialize($this->bookRepository->findAll());
 
         return new JsonResponse($data, 200, [], true);
     }
@@ -50,11 +45,11 @@ final class BookController extends AbstractController
      */
     public function bookCreate(Request $request): JsonResponse
     {
-        $book = $this->serializer->deserialize(
-            $request->getContent(),
-            Book::class,
-            'json'
-        );
+        $book = $this->serializer->deserialize($request, Book::class);
+
+        if ($messages = $this->validator->validateEntity($book)) {
+            return new JsonResponse(['errors' => $messages], 400);
+        }
 
         $bookManager = new BookManager($this->entityManager);
         $bookManager->create($book);
@@ -73,11 +68,11 @@ final class BookController extends AbstractController
             return new JsonResponse(['message' => sprintf('Book id %d not found', $id)]);
         }
 
-        $bookUpdated = $this->serializer->deserialize(
-            $request->getContent(),
-            Book::class,
-            'json'
-        );
+        $bookUpdated = $this->serializer->deserialize($request, Book::class);
+
+        if ($messages = $this->validator->validateEntity($bookUpdated)) {
+            return new JsonResponse(['errors' => $messages], 400);
+        }
 
         $bookManager = new BookManager($this->entityManager);
         $bookManager->update($book, $bookUpdated);
