@@ -15,3 +15,8 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 /.timesheet.md
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
