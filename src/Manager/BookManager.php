@@ -16,20 +16,20 @@ final class BookManager
         $this->entityManager = $entityManager;
     }
 
-    private function persist(Book $book)
+    public function create(Book $book)
     {
         $this->entityManager->persist($book);
         $this->entityManager->flush();
     }
 
-    public function create(Book $book)
+    public function update(Book $book, Book $bookUpdated)
     {
-        $this->persist($book);
-    }
+        $book->setTitle($bookUpdated->getTitle());
+        $book->setAuthor($bookUpdated->getAuthor());
+        $book->setDescription($bookUpdated->getDescription());
 
-    public function update(Book $book)
-    {
-        $this->persist($book);
+        $this->entityManager->persist($book);
+        $this->entityManager->flush();
     }
 
     public function delete(Book $book)

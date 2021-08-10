@@ -41,11 +41,9 @@ final class BookManagerTest extends BaseKernelTestCase
         /** @var Book $book */
         $book = $this->getEntityManager()->getRepository(Book::class)->findOneBy(['title' => 'Title']);
 
-        $book->setTitle('New Title');
-        $book->setAuthor('New Author');
-        $book->setDescription('New Description');
+        $bookUpdated = new Book('New Title','New Author','New Description');
 
-        $bookManager->update($book);
+        $bookManager->update($book, $bookUpdated);
 
         $this->assertEquals('New Title', $book->getTitle());
         $this->assertEquals('New Author', $book->getAuthor());
